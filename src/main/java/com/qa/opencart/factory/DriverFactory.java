@@ -153,7 +153,7 @@ public class DriverFactory {
 	public static String getScreenshot(String methodName) {
 		File srcFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
 		//Users/naveenautomationlabs/Documents/workspace1/
-		String path = System.getProperty("user.dir")+"/screenshot/" + methodName + ".png";
+		String path = System.getProperty("//C:/Eclipse_Seleniu")+"/screenshot/" + methodName + ".png";
 		File destination = new File(path);
 		try {
 			FileUtils.copyFile(srcFile, destination);

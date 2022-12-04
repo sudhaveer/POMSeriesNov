@@ -13,9 +13,7 @@ pipeline
             steps
             {
                  git 'https://github.com/jglick/simple-maven-project-with-tests.git'
-                // sh "mvn -Dmaven.test.failure.ignore=true clean package"
-                 
-               
+                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
             }
             post 
             {
@@ -39,7 +37,7 @@ pipeline
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/sudhaveer/POMSeriesNov.git'
-                    sh "mvn clean install"
+                    sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunner/testng_regression.xml"
                     
                 }
             }
@@ -65,7 +63,7 @@ pipeline
             steps{
                      publishHTML([allowMissing: false,
                                   alwaysLinkToLastBuild: false, 
-                                  keepAll: false, 
+                                  keepAll: true, 
                                   reportDir: 'reports', 
                                   reportFiles: 'TestExecutionReport.html', 
                                   reportName: 'HTML Extent Report', 
@@ -79,7 +77,7 @@ pipeline
             }
         }
         
-     /*   stage('Sanity Automation Test') {
+        stage('Sanity Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/sudhaveer/POMSeriesNov.git'
@@ -99,7 +97,7 @@ pipeline
                                   reportName: 'HTML Sanity Extent Report', 
                                   reportTitles: ''])
             }
-        }*/
+        }
         
         
     }

@@ -77,7 +77,7 @@ pipeline
             }
         }
         
-        stage('Sanity Automation Test') {
+     /*   stage('Sanity Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/sudhaveer/POMSeriesNov.git'
@@ -97,7 +97,7 @@ pipeline
                                   reportName: 'HTML Sanity Extent Report', 
                                   reportTitles: ''])
             }
-        }
+        }*/
         
         
     }

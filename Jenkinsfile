@@ -1,37 +1,104 @@
-pipeline {
+pipeline 
+{
     agent any
+    
+    tools{
+    	maven 'maven'
+        }
 
-    stages {
-        stage('build') {
-            steps {
-                echo 'buid the project'
+    stages 
+    {
+        stage('Build') 
+        {
+            steps
+            {
+                 git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+            post 
+            {
+                success
+                {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
             }
         }
-        stage('Deploy on dev env') {
-            steps {
-                echo 'Deploy on dev env'
+        
+        
+        
+        stage("Deploy to QA"){
+            steps{
+                echo("deploy to qa")
             }
         }
-        stage('Deploy on qa env') {
+                
+        stage('Regression Automation Test') {
             steps {
-                echo 'Deploy on qa env'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/sudhaveer/POMSeriesNov'
+                    sh "mvn clean install"
+                    
+                }
             }
         }
-        stage('Deploy on stage env') {
-            steps {
-                echo 'Deploy on stage env'
+                
+     
+        stage('Publish Allure Reports') {
+           steps {
+                script {
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: '/allure-results']]
+                    ])
+                }
             }
         }
-        stage('Deploy on prod env') {
-            steps {
-                echo 'Deploy on prod env'
+        
+        
+        stage('Publish Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: true, 
+                                  reportDir: 'reports', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Extent Report', 
+                                  reportTitles: ''])
             }
         }
-        stage('Deploy on uat env') {
-            steps {
-                echo 'Deploy on uat env'
+        
+        stage("Deploy to Stage"){
+            steps{
+                echo("deploy to Stage")
             }
         }
+        
+        stage('Sanity Automation Test') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/naveenanimation20/Apr2022POMSeries.git'
+                    sh "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunner/testng_sanity.xml"
+                    
+                }
+            }
+        }
+        
+        stage('Publish sanity Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: true, 
+                                  reportDir: 'reports', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Sanity Extent Report', 
+                                  reportTitles: ''])
+            }
+        }
+        
+        
     }
-   
 }

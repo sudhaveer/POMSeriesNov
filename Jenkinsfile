@@ -13,7 +13,7 @@ pipeline
             steps
             {
                  git 'https://github.com/jglick/simple-maven-project-with-tests.git'
-                 sh "mvn clean package"
+                 bat "mvn clean package"
             }
             post 
             {
@@ -38,7 +38,7 @@ pipeline
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/sudhaveer/POMSeriesNov.git'
                     
-                    sh "mvn clean install"
+                    bat "mvn clean install"
                     
                 }
             }

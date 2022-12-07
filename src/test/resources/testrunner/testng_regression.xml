@@ -43,7 +43,7 @@
 
 	<test name="Product Search Test_ch_100">
 	<parameter name="browser" value="chrome" />
-	<parameter name="browser" value="100.0" />
+	<parameter name="browserversion" value="100.0" />
 		<classes>
 			<class name="com.qa.opencart.tests.ProductSearchTest" />
 		</classes>
